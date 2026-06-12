@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="1.2.3" use-changelog="false" max-obj-count="12"
+	 gen-disabled-objs-code="false" show-sys-schemas-rects="true"
+	 last-position="0,-28" last-zoom="0.7" scene-rect="-60,-40,1741.23,1116.8"
+	 default-schema="public" default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layers="0" fill-color="#e1e1e1" name-color="#000000" sql-disabled="true">
+</schema>
+
+<domain name="name_length" not-null="false">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<type name="varchar" length="50"/>
+	<constraint name="length" type="check">
+		<expression> <![CDATA[length(btrim(VALUE)) >= 2]]> </expression>
+	</constraint>
+</domain>
+
+<table name="skill" layers="0" collapse-mode="2" pagination="true" attribs-page="0" ext-attribs-page="0" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1420" y="340"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="50"/>
+	</column>
+	<column name="skill_type">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="pk_skill" type="pk-constr" table="public.skill">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="employee_skill" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="840" y="-20"/>
+	<column name="level">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="employee_id" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="skill_id" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+</table>
+
+<table name="employee" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="460" y="280"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="first_name" not-null="true">
+		<type name="public.name_length" length="50"/>
+	</column>
+	<column name="last_name" not-null="true">
+		<type name="varchar" length="50"/>
+	</column>
+	<column name="email">
+		<type name="varchar" length="50"/>
+	</column>
+	<column name="phone">
+		<type name="varchar" length="50"/>
+	</column>
+	<column name="birth_date">
+		<type name="date" length="0"/>
+	</column>
+	<constraint name="pk_employee" type="pk-constr" table="public.employee">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uq_employee_email" type="uq-constr" table="public.employee">
+		<columns names="email" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="chk_empty_first_name" type="ck-constr" table="public.employee">
+			<expression> <![CDATA[length(btrim(first_name)) <=2]]> </expression>
+	</constraint>
+</table>
+
+<table name="mentor_profile" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="140" y="620"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="max_mentees" default-value="1" generated="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="employee_id">
+		<type name="smallint" length="0"/>
+	</column>
+	<constraint name="pk_profile" type="pk-constr" table="public.mentor_profile">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="availability" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="-40" y="120"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="day_of_week" not-null="true">
+		<type name="varchar" length="20"/>
+	</column>
+	<column name="start_time" not-null="true">
+		<type name="time" length="0"/>
+	</column>
+	<column name="end_time" not-null="true">
+		<type name="time" length="0"/>
+	</column>
+	<constraint name="pk_availability" type="pk-constr" table="public.availability">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="request" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="900" y="320"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="start_level">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="target_level">
+		<type name="smallint" length="0"/>
+	</column>
+	<constraint name="pk_request" type="pk-constr" table="public.request">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="mentorship" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="700" y="780"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="start_date" not-null="true">
+		<type name="date" length="0"/>
+	</column>
+	<column name="end_date" not-null="true">
+		<type name="date" length="0"/>
+	</column>
+	<column name="status" not-null="true">
+		<type name="varchar" length="50"/>
+	</column>
+	<column name="score" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<constraint name="pk_mentorship" type="pk-constr" table="public.mentorship">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="fk_employee_skill_to_employee" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.employee" table="public.employee_skill">
+	<columns names="employee_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_employee_skill_to_skill" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.skill" table="public.employee_skill">
+	<columns names="skill_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_profile_to_employee" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.employee" table="public.mentor_profile">
+	<columns names="employee_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_availability_to_employee" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.employee" table="public.availability">
+	<columns names="id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_request_to_employee" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.employee" table="public.request">
+	<columns names="id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_request_to_skill" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.skill" table="public.request">
+	<columns names="id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_mentorship_to_mentor" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.mentor_profile" table="public.mentorship">
+	<columns names="id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_mentorship_to_mentee" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.employee" table="public.mentorship">
+	<columns names="id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_mentorship_to_request" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.request" table="public.mentorship">
+	<columns names="id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_mentorship_to_skill" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.skill" table="public.mentorship">
+	<columns names="id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_employee_skill_employee" type="relfk" layers="0"
+	 src-table="public.employee_skill"
+	 dst-table="public.employee" reference-fk="fk_employee_skill_to_employee"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-8.48576" y="-34.453"/>
+	</label>
+</relationship>
+
+<relationship name="rel_employee_skill_skill" type="relfk" layers="0"
+	 src-table="public.employee_skill"
+	 dst-table="public.skill" reference-fk="fk_employee_skill_to_skill"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_mentor_employee_profile_employee" type="relfk" layers="0"
+	 src-table="public.mentor_profile"
+	 dst-table="public.employee" reference-fk="fk_profile_to_employee"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_availability_employee" type="relfk" layers="0"
+	 src-table="public.availability"
+	 dst-table="public.employee" reference-fk="fk_availability_to_employee"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_request_employee" type="relfk" layers="0"
+	 src-table="public.request"
+	 dst-table="public.employee" reference-fk="fk_request_to_employee"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_request_skill" type="relfk" layers="0"
+	 src-table="public.request"
+	 dst-table="public.skill" reference-fk="fk_request_to_skill"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_mentorship_mentor_profile" type="relfk" layers="0"
+	 src-table="public.mentorship"
+	 dst-table="public.mentor_profile" reference-fk="fk_mentorship_to_mentor"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_mentorship_employee" type="relfk" layers="0"
+	 src-table="public.mentorship"
+	 dst-table="public.employee" reference-fk="fk_mentorship_to_mentee"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_mentorship_request" type="relfk" layers="0"
+	 src-table="public.mentorship"
+	 dst-table="public.request" reference-fk="fk_mentorship_to_request"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_mentorship_skill" type="relfk" layers="0"
+	 src-table="public.mentorship"
+	 dst-table="public.skill" reference-fk="fk_mentorship_to_skill"
+	 src-required="false" dst-required="true"/>
+
+</dbmodel>
