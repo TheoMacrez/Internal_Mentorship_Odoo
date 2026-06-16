@@ -12,7 +12,7 @@ ALTER DOMAIN public.name_length OWNER TO postgres;
 CREATE TABLE public.skill (
 	id_skill smallint NOT NULL GENERATED ALWAYS AS IDENTITY ,
 	name varchar(50) NOT NULL,
-	skill_type varchar NOT NULL,
+	skill_type varchar(20) NOT NULL,
 	CONSTRAINT pk_skill PRIMARY KEY (id_skill),
 	CONSTRAINT uq_skill_name UNIQUE (name)
 );
@@ -113,6 +113,14 @@ CREATE TABLE public.mentorship (
 );
 -- ddl-end --
 ALTER TABLE public.mentorship OWNER TO postgres;
+-- ddl-end --
+
+-- object: public.skill_type | type: TYPE --
+-- DROP TYPE IF EXISTS public.skill_type CASCADE;
+CREATE TYPE public.skill_type AS
+ENUM ('TECHNICAL','BUSINESS','SOFT_SKILL','MANAGEMENT','LANGUAGE','OTHER');
+-- ddl-end --
+ALTER TYPE public.skill_type OWNER TO postgres;
 -- ddl-end --
 
 -- object: fk_employee_skill_to_employee | type: CONSTRAINT --
