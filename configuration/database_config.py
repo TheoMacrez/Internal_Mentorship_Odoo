@@ -29,17 +29,3 @@ def get_connection ():
      return psycopg.connect(
          DATABASE_URL
      )
-
-def add_first_employee():
-    with get_connection() as conn: 
-        with conn.cursor(row_factory=class_row(Employee)) as cur:
-            cur.execute("""
-            INSERT INTO employee(first_name,last_name,email,phone,birth_date)
-            VALUES (%s,%s,%s,%s,%s)
-            RETURNING id_employee, first_name, last_name, email, phone, birth_date;
-            """,
-            ('Theo','Macrez','macrez2.theo@hotmail.fr','+33649122461','1995-03-04'))
-            
-            print(cur.fetchone())
-
-add_first_employee()
