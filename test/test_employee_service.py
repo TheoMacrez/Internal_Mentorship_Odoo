@@ -1,4 +1,3 @@
-#pip install pytest
 
 from unittest.mock import Mock
 import pytest
