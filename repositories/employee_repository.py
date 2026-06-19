@@ -17,7 +17,7 @@ class EmployeeRepository:
                         birth_date
                     FROM employee
                     WHERE id_employee = %s
-                """, (employee_id))
+                """, (employee_id,))
 
                 return cur.fetchone()
     
@@ -34,7 +34,7 @@ class EmployeeRepository:
                         birth_date
                     FROM employee
                     WHERE email = %s
-                """, (email))
+                """, (email,))
 
                 return cur.fetchone()
     
@@ -72,7 +72,7 @@ class EmployeeRepository:
                     DELETE FROM employee
                     WHERE id_employee = %s
                     RETURNING id_employee, first_name, last_name, email, phone, birth_date;
-                """, (employee_id))
+                """, (employee_id,))
             
                 #Check if the deletion has been done
                 return cur.fetchone() is not None

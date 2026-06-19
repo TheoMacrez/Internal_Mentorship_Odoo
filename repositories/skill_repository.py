@@ -10,10 +10,10 @@ class SkillRepository:
                     SELECT
                         id_skill,
                         name,
-                        skill_type,
+                        skill_type
                     FROM skill
                     WHERE id_skill = %s
-                """, (skill_id))
+                """, (skill_id,))
 
                 return cur.fetchone()
     
@@ -24,10 +24,10 @@ class SkillRepository:
                     SELECT
                         id_skill,
                         name,
-                        skill_type,
+                        skill_type
                     FROM skill
                     WHERE name = %s
-                """, (name))
+                """, (name,))
 
                 return cur.fetchone()
     
@@ -38,10 +38,10 @@ class SkillRepository:
                     SELECT
                         id_skill,
                         name,
-                        skill_type,
+                        skill_type
                     FROM skill
                     WHERE skill_type = %s
-                """, (type))
+                """, (type,))
 
                 return cur.fetchall()
     
@@ -63,7 +63,7 @@ class SkillRepository:
                 cur.execute("""
                     UPDATE skill
                     SET name = %s,
-                        skill_type = %s,
+                        skill_type = %s
                     WHERE id_skill = %s
                     RETURNING id_skill, name, skill_type;
             """, (name, skill_type, skill_id))
@@ -77,7 +77,7 @@ class SkillRepository:
                     DELETE FROM skill
                     WHERE id_skill = %s
                     RETURNING id_skill, name, skill_type
-                """, (skill_id))
+                """, (skill_id,))
             
                 #Check if the deletion has been done
                 return cur.fetchone() is not None
