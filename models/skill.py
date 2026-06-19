@@ -5,13 +5,13 @@ from enum import Enum
 class Skill:
     id_skill: int
     name: str
-    skill_type: Skill_Type
+    skill_type: SkillType
    
     def __str__(self):
         return f"{self.name} ({self.skill_type}) "
 
 
-class Skill_Type(Enum):
+class SkillType(Enum):
     "TECHNICAL"
     "BUSINESS"
     "SOFT_SKILL"
