@@ -22,6 +22,11 @@ def availability_service(availability_repository, employee_repository):
     return AvailabilityService(availability_repository, employee_repository)
 
 
+@pytest.fixture(autouse=True)
+def mock_get_connection(patch_get_connection):
+    return patch_get_connection("services.availability_service.get_connection")
+
+
 @pytest.fixture
 def employee():
     return Employee(
@@ -75,7 +80,8 @@ def test_get_availabilities_by_employee_id_should_return_availabilities(
         availability_repository,
         employee_repository,
         employee,
-        availability):
+        availability,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = employee
     availability_repository.find_by_employee_id.return_value = [availability]
@@ -83,20 +89,28 @@ def test_get_availabilities_by_employee_id_should_return_availabilities(
     result = availability_service.get_availabilities_by_employee_id(1)
 
     assert result == [availability]
-    employee_repository.find_by_id.assert_called_once_with(1)
-    availability_repository.find_by_employee_id.assert_called_once_with(1)
+    employee_repository.find_by_id.assert_called_once_with(1, fake_connection)
+    availability_repository.find_by_employee_id.assert_called_once_with(
+        1,
+        fake_connection
+    )
 
 
 def test_get_availabilities_by_employee_id_should_raise_error_when_employee_not_found(
         availability_service,
         availability_repository,
-        employee_repository):
+        employee_repository,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = None
 
     with pytest.raises(ValueError, match="Employee does not exist"):
         availability_service.get_availabilities_by_employee_id(999)
 
+    employee_repository.find_by_id.assert_called_once_with(
+        999,
+        fake_connection
+    )
     availability_repository.find_by_employee_id.assert_not_called()
 
 
@@ -153,7 +167,8 @@ def test_create_availability_should_create_when_employee_exists(
         availability_repository,
         employee_repository,
         employee,
-        availability):
+        availability,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = employee
     availability_repository.create_availability.return_value = availability
@@ -166,19 +181,21 @@ def test_create_availability_should_create_when_employee_exists(
     )
 
     assert result == availability
-    employee_repository.find_by_id.assert_called_once_with(1)
+    employee_repository.find_by_id.assert_called_once_with(1, fake_connection)
     availability_repository.create_availability.assert_called_once_with(
         "MONDAY",
         time(9, 0),
         time(12, 0),
-        1
+        1,
+        fake_connection
     )
 
 
 def test_create_availability_should_raise_error_when_employee_not_found(
         availability_service,
         availability_repository,
-        employee_repository):
+        employee_repository,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = None
 
@@ -190,6 +207,10 @@ def test_create_availability_should_raise_error_when_employee_not_found(
             999
         )
 
+    employee_repository.find_by_id.assert_called_once_with(
+        999,
+        fake_connection
+    )
     availability_repository.create_availability.assert_not_called()
 
 
@@ -215,7 +236,8 @@ def test_update_availability_should_call_repository_when_employee_exists(
         availability_repository,
         employee_repository,
         employee,
-        availability):
+        availability,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = employee
     availability_repository.update_availability.return_value = availability
@@ -229,20 +251,22 @@ def test_update_availability_should_call_repository_when_employee_exists(
     )
 
     assert result == availability
-    employee_repository.find_by_id.assert_called_once_with(1)
+    employee_repository.find_by_id.assert_called_once_with(1, fake_connection)
     availability_repository.update_availability.assert_called_once_with(
         1,
         "MONDAY",
         time(9, 0),
         time(12, 0),
-        1
+        1,
+        fake_connection
     )
 
 
 def test_update_availability_should_raise_error_when_employee_not_found(
         availability_service,
         availability_repository,
-        employee_repository):
+        employee_repository,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = None
 
@@ -255,6 +279,10 @@ def test_update_availability_should_raise_error_when_employee_not_found(
             999
         )
 
+    employee_repository.find_by_id.assert_called_once_with(
+        999,
+        fake_connection
+    )
     availability_repository.update_availability.assert_not_called()
 
 

@@ -15,6 +15,11 @@ def skill_service(mock_repository):
     return SkillService(mock_repository)
 
 
+@pytest.fixture(autouse=True)
+def mock_get_connection(patch_get_connection):
+    return patch_get_connection("services.skill_service.get_connection")
+
+
 @pytest.fixture
 def skill():
     return Skill(
@@ -42,24 +47,42 @@ def test_get_skill_by_id_should_return_none_when_not_found(skill_service, mock_r
     mock_repository.find_by_id.assert_called_once_with(999)
 
 
-def test_create_skill_should_create_skill_when_name_is_unique(skill_service, mock_repository, skill):
+def test_create_skill_should_create_skill_when_name_is_unique(
+        skill_service,
+        mock_repository,
+        skill,
+        fake_connection):
     mock_repository.find_by_name.return_value = None
     mock_repository.create.return_value = skill
 
     result = skill_service.create_skill("PostgreSQL", "TECHNICAL")
 
     assert result == skill
-    mock_repository.find_by_name.assert_called_once_with("PostgreSQL")
-    mock_repository.create.assert_called_once_with("PostgreSQL", "TECHNICAL")
+    mock_repository.find_by_name.assert_called_once_with(
+        "PostgreSQL",
+        fake_connection
+    )
+    mock_repository.create.assert_called_once_with(
+        "PostgreSQL",
+        "TECHNICAL",
+        fake_connection
+    )
 
 
-def test_create_skill_should_raise_error_when_name_already_exists(skill_service, mock_repository, skill):
+def test_create_skill_should_raise_error_when_name_already_exists(
+        skill_service,
+        mock_repository,
+        skill,
+        fake_connection):
     mock_repository.find_by_name.return_value = skill
 
     with pytest.raises(ValueError, match="Skill already exists"):
         skill_service.create_skill("PostgreSQL", "TECHNICAL")
 
-    mock_repository.find_by_name.assert_called_once_with("PostgreSQL")
+    mock_repository.find_by_name.assert_called_once_with(
+        "PostgreSQL",
+        fake_connection
+    )
     mock_repository.create.assert_not_called()
 
 

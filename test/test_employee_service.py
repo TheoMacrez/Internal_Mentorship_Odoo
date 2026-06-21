@@ -16,6 +16,11 @@ def employee_service(mock_repository):
     return EmployeeService(mock_repository)
 
 
+@pytest.fixture(autouse=True)
+def mock_get_connection(patch_get_connection):
+    return patch_get_connection("services.employee_service.get_connection")
+
+
 @pytest.fixture
 def employee():
     return Employee(
@@ -58,7 +63,8 @@ def test_get_employee_by_id_should_return_none_when_not_found(
 def test_create_employee_should_create_employee_when_email_is_unique(
         employee_service,
         mock_repository,
-        employee):
+        employee,
+        fake_connection):
 
     mock_repository.find_by_email.return_value = None
     mock_repository.create.return_value = employee
@@ -74,7 +80,8 @@ def test_create_employee_should_create_employee_when_email_is_unique(
     assert result == employee
 
     mock_repository.find_by_email.assert_called_once_with(
-        "theo@test.com"
+        "theo@test.com",
+        fake_connection
     )
 
     mock_repository.create.assert_called_once_with(
@@ -82,14 +89,16 @@ def test_create_employee_should_create_employee_when_email_is_unique(
         "Macrez",
         "theo@test.com",
         "+33600000000",
-        "1995-03-04"
+        "1995-03-04",
+        fake_connection
     )
 
 
 def test_create_employee_should_raise_exception_when_email_already_exists(
         employee_service,
         mock_repository,
-        employee):
+        employee,
+        fake_connection):
 
     mock_repository.find_by_email.return_value = employee
 
@@ -102,6 +111,10 @@ def test_create_employee_should_raise_exception_when_email_already_exists(
             "1995-03-04"
         )
 
+    mock_repository.find_by_email.assert_called_once_with(
+        "theo@test.com",
+        fake_connection
+    )
     mock_repository.create.assert_not_called()
 
 

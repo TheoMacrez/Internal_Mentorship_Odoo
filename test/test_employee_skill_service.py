@@ -34,6 +34,11 @@ def employee_skill_service(
     )
 
 
+@pytest.fixture(autouse=True)
+def mock_get_connection(patch_get_connection):
+    return patch_get_connection("services.employee_skill_service.get_connection")
+
+
 @pytest.fixture
 def employee():
     return Employee(
@@ -69,7 +74,8 @@ def test_get_skills_by_employee_id_should_return_employee_skills(
         employee_skill_repository,
         employee_repository,
         employee,
-        employee_skill):
+        employee_skill,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = employee
     employee_skill_repository.find_by_employee_id.return_value = [employee_skill]
@@ -77,20 +83,28 @@ def test_get_skills_by_employee_id_should_return_employee_skills(
     result = employee_skill_service.get_skills_by_employee_id(1)
 
     assert result == [employee_skill]
-    employee_repository.find_by_id.assert_called_once_with(1)
-    employee_skill_repository.find_by_employee_id.assert_called_once_with(1)
+    employee_repository.find_by_id.assert_called_once_with(1, fake_connection)
+    employee_skill_repository.find_by_employee_id.assert_called_once_with(
+        1,
+        fake_connection
+    )
 
 
 def test_get_skills_by_employee_id_should_raise_error_when_employee_not_found(
         employee_skill_service,
         employee_repository,
-        employee_skill_repository):
+        employee_skill_repository,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = None
 
     with pytest.raises(ValueError, match="Employee does not exist"):
         employee_skill_service.get_skills_by_employee_id(999)
 
+    employee_repository.find_by_id.assert_called_once_with(
+        999,
+        fake_connection
+    )
     employee_skill_repository.find_by_employee_id.assert_not_called()
 
 
@@ -99,7 +113,8 @@ def test_get_employees_by_skill_id_should_return_employee_skills(
         employee_skill_repository,
         skill_repository,
         skill,
-        employee_skill):
+        employee_skill,
+        fake_connection):
 
     skill_repository.find_by_id.return_value = skill
     employee_skill_repository.find_by_skill_id.return_value = [employee_skill]
@@ -107,20 +122,25 @@ def test_get_employees_by_skill_id_should_return_employee_skills(
     result = employee_skill_service.get_employees_by_skill_id(1)
 
     assert result == [employee_skill]
-    skill_repository.find_by_id.assert_called_once_with(1)
-    employee_skill_repository.find_by_skill_id.assert_called_once_with(1)
+    skill_repository.find_by_id.assert_called_once_with(1, fake_connection)
+    employee_skill_repository.find_by_skill_id.assert_called_once_with(
+        1,
+        fake_connection
+    )
 
 
 def test_get_employees_by_skill_id_should_raise_error_when_skill_not_found(
         employee_skill_service,
         skill_repository,
-        employee_skill_repository):
+        employee_skill_repository,
+        fake_connection):
 
     skill_repository.find_by_id.return_value = None
 
     with pytest.raises(ValueError, match="Skill does not exist"):
         employee_skill_service.get_employees_by_skill_id(999)
 
+    skill_repository.find_by_id.assert_called_once_with(999, fake_connection)
     employee_skill_repository.find_by_skill_id.assert_not_called()
 
 
@@ -131,7 +151,8 @@ def test_assign_skill_to_employee_should_assign_when_valid(
         skill_repository,
         employee,
         skill,
-        employee_skill):
+        employee_skill,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = employee
     skill_repository.find_by_id.return_value = skill
@@ -142,23 +163,36 @@ def test_assign_skill_to_employee_should_assign_when_valid(
 
     assert result == employee_skill
 
-    employee_repository.find_by_id.assert_called_once_with(1)
-    skill_repository.find_by_id.assert_called_once_with(1)
-    employee_skill_repository.find_by_employee_id.assert_called_once_with(1)
-    employee_skill_repository.assign_employee_skill.assert_called_once_with(3, 1, 1)
+    employee_repository.find_by_id.assert_called_once_with(1, fake_connection)
+    skill_repository.find_by_id.assert_called_once_with(1, fake_connection)
+    employee_skill_repository.find_by_employee_id.assert_called_once_with(
+        1,
+        fake_connection
+    )
+    employee_skill_repository.assign_employee_skill.assert_called_once_with(
+        3,
+        1,
+        1,
+        fake_connection
+    )
 
 
 def test_assign_skill_to_employee_should_raise_error_when_employee_not_found(
         employee_skill_service,
         employee_repository,
         skill_repository,
-        employee_skill_repository):
+        employee_skill_repository,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = None
 
     with pytest.raises(ValueError, match="Employee does not exist"):
         employee_skill_service.assign_skill_to_employee(999, 1, 3)
 
+    employee_repository.find_by_id.assert_called_once_with(
+        999,
+        fake_connection
+    )
     skill_repository.find_by_id.assert_not_called()
     employee_skill_repository.assign_employee_skill.assert_not_called()
 
@@ -168,7 +202,8 @@ def test_assign_skill_to_employee_should_raise_error_when_skill_not_found(
         employee_repository,
         skill_repository,
         employee_skill_repository,
-        employee):
+        employee,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = employee
     skill_repository.find_by_id.return_value = None
@@ -176,6 +211,8 @@ def test_assign_skill_to_employee_should_raise_error_when_skill_not_found(
     with pytest.raises(ValueError, match="Skill does not exist"):
         employee_skill_service.assign_skill_to_employee(1, 999, 3)
 
+    employee_repository.find_by_id.assert_called_once_with(1, fake_connection)
+    skill_repository.find_by_id.assert_called_once_with(999, fake_connection)
     employee_skill_repository.assign_employee_skill.assert_not_called()
 
 
@@ -193,6 +230,8 @@ def test_assign_skill_to_employee_should_raise_error_when_level_is_invalid(
     with pytest.raises(ValueError, match="Level must be between 1 and 5"):
         employee_skill_service.assign_skill_to_employee(1, 1, 6)
 
+    employee_repository.find_by_id.assert_not_called()
+    skill_repository.find_by_id.assert_not_called()
     employee_skill_repository.assign_employee_skill.assert_not_called()
 
 
@@ -203,7 +242,8 @@ def test_assign_skill_to_employee_should_raise_error_when_skill_already_assigned
         employee_skill_repository,
         employee,
         skill,
-        employee_skill):
+        employee_skill,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = employee
     skill_repository.find_by_id.return_value = skill
@@ -212,6 +252,12 @@ def test_assign_skill_to_employee_should_raise_error_when_skill_already_assigned
     with pytest.raises(ValueError, match="Skill already assigned to employee"):
         employee_skill_service.assign_skill_to_employee(1, 1, 3)
 
+    employee_repository.find_by_id.assert_called_once_with(1, fake_connection)
+    skill_repository.find_by_id.assert_called_once_with(1, fake_connection)
+    employee_skill_repository.find_by_employee_id.assert_called_once_with(
+        1,
+        fake_connection
+    )
     employee_skill_repository.assign_employee_skill.assert_not_called()
 
 
@@ -222,7 +268,8 @@ def test_update_employee_skill_level_should_update_when_valid(
         skill_repository,
         employee,
         skill,
-        employee_skill):
+        employee_skill,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = employee
     skill_repository.find_by_id.return_value = skill
@@ -231,16 +278,27 @@ def test_update_employee_skill_level_should_update_when_valid(
     result = employee_skill_service.update_employee_skill_level(1, 1, 3)
 
     assert result == employee_skill
-    employee_skill_repository.update_skill_level.assert_called_once_with(3, 1, 1)
+    employee_repository.find_by_id.assert_called_once_with(1, fake_connection)
+    skill_repository.find_by_id.assert_called_once_with(1, fake_connection)
+    employee_skill_repository.update_skill_level.assert_called_once_with(
+        3,
+        1,
+        1,
+        fake_connection
+    )
 
 
 def test_update_employee_skill_level_should_raise_error_when_level_is_invalid(
         employee_skill_service,
+        employee_repository,
+        skill_repository,
         employee_skill_repository):
 
     with pytest.raises(ValueError, match="Level must be between 1 and 5"):
         employee_skill_service.update_employee_skill_level(1, 1, 0)
 
+    employee_repository.find_by_id.assert_not_called()
+    skill_repository.find_by_id.assert_not_called()
     employee_skill_repository.update_skill_level.assert_not_called()
 
 
@@ -250,7 +308,8 @@ def test_remove_skill_from_employee_should_return_true_when_deleted(
         employee_repository,
         skill_repository,
         employee,
-        skill):
+        skill,
+        fake_connection):
 
     employee_repository.find_by_id.return_value = employee
     skill_repository.find_by_id.return_value = skill
@@ -259,4 +318,10 @@ def test_remove_skill_from_employee_should_return_true_when_deleted(
     result = employee_skill_service.remove_skill_from_employee(1, 1)
 
     assert result is True
-    employee_skill_repository.delete.assert_called_once_with(1, 1)
+    employee_repository.find_by_id.assert_called_once_with(1, fake_connection)
+    skill_repository.find_by_id.assert_called_once_with(1, fake_connection)
+    employee_skill_repository.delete.assert_called_once_with(
+        1,
+        1,
+        fake_connection
+    )
