@@ -1,3 +1,4 @@
+from configuration.database_config import get_connection
 from repositories.employee_repository import EmployeeRepository
 
 class EmployeeService:
@@ -10,12 +11,14 @@ class EmployeeService:
 
     def create_employee(self,first_name, last_name, email, phone, birth_date):
 
-        already_existing_employee = self.employee_repository.find_by_email(email)
+        with get_connection() as conn:
 
-        if already_existing_employee :
-            raise ValueError("Email already exists")
+            already_existing_employee = self.employee_repository.find_by_email(email,conn)
 
-        return self.employee_repository.create(first_name,last_name,email,phone,birth_date)
+            if already_existing_employee :
+                raise ValueError("Email already exists")
+
+            return self.employee_repository.create(first_name,last_name,email,phone,birth_date,conn)
     
     def update_employee(self,first_name, last_name,email, phone, birth_date,employee_id):
 
