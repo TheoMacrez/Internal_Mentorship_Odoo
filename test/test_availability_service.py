@@ -63,6 +63,19 @@ def test_get_availability_by_id_should_return_availability(
     availability_repository.find_by_id.assert_called_once_with(1)
 
 
+def test_get_all_availabilities_should_return_availabilities(
+        availability_service,
+        availability_repository,
+        availability):
+
+    availability_repository.find_all.return_value = [availability]
+
+    result = availability_service.get_all_availabilities()
+
+    assert result == [availability]
+    availability_repository.find_all.assert_called_once_with()
+
+
 def test_get_availability_by_id_should_return_none_when_not_found(
         availability_service,
         availability_repository):

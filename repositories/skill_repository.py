@@ -5,6 +5,26 @@ from models.skill import Skill
 
 class SkillRepository:
 
+    def find_all(self, conn=None):
+        if conn:
+            return self._find_all(conn)
+
+        with get_connection() as conn:
+            return self._find_all(conn)
+
+    def _find_all(self, conn):
+        with conn.cursor(row_factory=class_row(Skill)) as cur:
+            cur.execute("""
+                SELECT
+                    id_skill,
+                    name,
+                    skill_type
+                FROM skill
+                ORDER BY id_skill
+            """)
+
+            return cur.fetchall()
+
     def find_by_id(self, skill_id, conn=None):
         if conn:
             return self._find_by_id(conn, skill_id)

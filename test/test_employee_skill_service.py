@@ -90,6 +90,19 @@ def test_get_skills_by_employee_id_should_return_employee_skills(
     )
 
 
+def test_get_all_employee_skills_should_return_employee_skills(
+        employee_skill_service,
+        employee_skill_repository,
+        employee_skill):
+
+    employee_skill_repository.find_all.return_value = [employee_skill]
+
+    result = employee_skill_service.get_all_employee_skills()
+
+    assert result == [employee_skill]
+    employee_skill_repository.find_all.assert_called_once_with()
+
+
 def test_get_skills_by_employee_id_should_raise_error_when_employee_not_found(
         employee_skill_service,
         employee_repository,

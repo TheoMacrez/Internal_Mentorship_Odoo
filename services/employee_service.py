@@ -6,6 +6,9 @@ class EmployeeService:
     def __init__(self, employee_repository):
         self.employee_repository = employee_repository
 
+    def get_all_employees(self):
+        return self.employee_repository.find_all()
+
     def get_employee_by_id(self,employee_id):
         return self.employee_repository.find_by_id(employee_id)
 

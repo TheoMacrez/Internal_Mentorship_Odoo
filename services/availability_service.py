@@ -9,6 +9,9 @@ class AvailabilityService:
         self.availability_repository = availability_repository
         self.employee_repository = employee_repository
 
+    def get_all_availabilities(self):
+        return self.availability_repository.find_all()
+
     def get_availability_by_id(self, id_availability):
         return self.availability_repository.find_by_id(id_availability)
 

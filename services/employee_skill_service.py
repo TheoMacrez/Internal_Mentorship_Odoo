@@ -16,6 +16,9 @@ class EmployeeSkillService:
         self.skill_repository = skill_repository
 
     
+    def get_all_employee_skills(self):
+        return self.employee_skill_repository.find_all()
+
     def get_skills_by_employee_id(self, employee_id):
 
         with get_connection() as conn:

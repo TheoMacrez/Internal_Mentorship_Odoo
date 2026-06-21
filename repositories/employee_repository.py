@@ -5,6 +5,29 @@ from models.employee import Employee
 
 class EmployeeRepository:
 
+    def find_all(self, conn=None):
+        if conn:
+            return self._find_all(conn)
+
+        with get_connection() as conn:
+            return self._find_all(conn)
+
+    def _find_all(self, conn):
+        with conn.cursor(row_factory=class_row(Employee)) as cur:
+            cur.execute("""
+                SELECT
+                    id_employee,
+                    first_name,
+                    last_name,
+                    email,
+                    phone,
+                    birth_date
+                FROM employee
+                ORDER BY id_employee
+            """)
+
+            return cur.fetchall()
+
     def find_by_id(self, employee_id, conn=None):
         if conn:
             return self._find_by_id(conn, employee_id)

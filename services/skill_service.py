@@ -6,6 +6,9 @@ class SkillService:
     def __init__(self, skill_repository):
         self.skill_repository = skill_repository
 
+    def get_all_skills(self):
+        return self.skill_repository.find_all()
+
     def get_skill_by_id(self,skill_id):
         return self.skill_repository.find_by_id(skill_id)
 

@@ -38,6 +38,15 @@ def test_get_skill_by_id_should_return_skill(skill_service, mock_repository, ski
     mock_repository.find_by_id.assert_called_once_with(1)
 
 
+def test_get_all_skills_should_return_skills(skill_service, mock_repository, skill):
+    mock_repository.find_all.return_value = [skill]
+
+    result = skill_service.get_all_skills()
+
+    assert result == [skill]
+    mock_repository.find_all.assert_called_once_with()
+
+
 def test_get_skill_by_id_should_return_none_when_not_found(skill_service, mock_repository):
     mock_repository.find_by_id.return_value = None
 

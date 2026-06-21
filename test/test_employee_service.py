@@ -47,6 +47,19 @@ def test_get_employee_by_id_should_return_employee(
     mock_repository.find_by_id.assert_called_once_with(1)
 
 
+def test_get_all_employees_should_return_employees(
+        employee_service,
+        mock_repository,
+        employee):
+
+    mock_repository.find_all.return_value = [employee]
+
+    result = employee_service.get_all_employees()
+
+    assert result == [employee]
+    mock_repository.find_all.assert_called_once_with()
+
+
 def test_get_employee_by_id_should_return_none_when_not_found(
         employee_service,
         mock_repository):

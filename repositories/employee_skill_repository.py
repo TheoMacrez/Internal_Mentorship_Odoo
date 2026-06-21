@@ -5,6 +5,24 @@ from models.employee_skill import EmployeeSkill
 
 class EmployeeSkillRepository:
 
+    def find_all(self, conn=None):
+        if conn:
+            return self._find_all(conn)
+
+        with get_connection() as conn:
+            return self._find_all(conn)
+
+    def _find_all(self, conn):
+        with conn.cursor(row_factory=class_row(EmployeeSkill)) as cur:
+            cur.execute("""
+                SELECT
+                    *
+                FROM employee_skill
+                ORDER BY employee_id, skill_id
+            """)
+
+            return cur.fetchall()
+
     def find_by_employee_id(self, employee_id, conn=None):
         if conn:
             return self._find_by_employee_id(conn, employee_id)
