@@ -1,11 +1,7 @@
-#pip install "psycopg[binary]"
-#python -m pip install python-dotenv
 
-import psycopg
-from psycopg.rows import dict_row, class_row
-from models.employee import Employee
 import os
 from dotenv import load_dotenv
+from psycopg_pool import ConnectionPool
 
 load_dotenv()
 
@@ -24,8 +20,15 @@ DATABASE_URL = (
     f"{db_name}"
 )
 
-def get_connection ():
+pool = ConnectionPool(
+    conninfo=DATABASE_URL,
+    min_size=1,
+    max_size=10,
+    open=True
+)
 
-     return psycopg.connect(
-         DATABASE_URL
-     )
+def get_connection():
+    return pool.connection()
+
+def close_pool():
+    pool.close()
