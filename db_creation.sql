@@ -123,6 +123,14 @@ ENUM ('TECHNICAL','BUSINESS','SOFT_SKILL','MANAGEMENT','LANGUAGE','OTHER');
 ALTER TYPE public.skill_type OWNER TO postgres;
 -- ddl-end --
 
+CREATE TYPE mentorship_status AS ENUM (
+    'ACCEPTED',
+    'IN_PROGRESS',
+    'PENDING_EVALUATION',
+    'SUCCESSFUL',
+    'UNSUCCESSFUL'
+);
+
 -- object: fk_employee_skill_to_employee | type: CONSTRAINT --
 -- ALTER TABLE public.employee_skill DROP CONSTRAINT IF EXISTS fk_employee_skill_to_employee CASCADE;
 ALTER TABLE public.employee_skill ADD CONSTRAINT fk_employee_skill_to_employee FOREIGN KEY (employee_id)

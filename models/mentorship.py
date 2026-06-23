@@ -14,3 +14,13 @@ class Mentorship:
     mentee_id:int
     request_id:int
     skill_id:int
+
+
+from enum import Enum
+
+class MentorshipStatus(Enum):
+    ACCEPTED = "ACCEPTED"
+    IN_PROGRESS = "IN_PROGRESS"
+    PENDING_EVALUATION = "PENDING_EVALUATION"
+    SUCCESSFUL = "SUCCESSFUL"
+    UNSUCCESSFUL = "UNSUCCESSFUL"
