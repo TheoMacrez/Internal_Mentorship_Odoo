@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import time
 
-from models.employee import Employee
+
 
 
 @dataclass
