@@ -102,7 +102,7 @@ CREATE TABLE public.mentorship (
 	start_date date NOT NULL,
 	end_date date,
 	status varchar(50) NOT NULL,
-	score smallint NOT NULL,
+	score smallint,
 	mentor_profile_id smallint NOT NULL,
 	mentee_id smallint NOT NULL,
 	request_id smallint NOT NULL,

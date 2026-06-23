@@ -109,7 +109,7 @@ class RequestService:
         self._validate_level(target_level)
 
         if target_level <= start_level:
-            raise ValueError("End level must be greater than start level")
+            raise ValueError("Target level must be greater than start level")
 
     def _validate_level(self, level):
         if level < 1 or level > 5:
