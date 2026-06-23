@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employees</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <main class="page">
+        <section class="toolbar">
+            <div>
+                <h1>Employees</h1>
+                <p>{{ employees|length }} employee(s)</p>
+            </div>
+        </section>
+
+        <section class="layout">
+            <form class="panel" method="post" action="{{ url_for('employees.list_employees') }}">
+                <h2>Create Employee</h2>
+
+                {% if error %}
+                    <p class="error">{{ error }}</p>
+                {% endif %}
+
+                <label>
+                    First name
+                    <input name="first_name" type="text" required>
+                </label>
+
+                <label>
+                    Last name
+                    <input name="last_name" type="text" required>
+                </label>
+
+                <label>
+                    Email
+                    <input name="email" type="email" required>
+                </label>
+
+                <label>
+                    Phone
+                    <input name="phone" type="text" required>
+                </label>
+
+                <label>
+                    Birth date
+                    <input name="birth_date" type="date" required>
+                </label>
+
+                <button type="submit">Create</button>
+            </form>
+
+            <section class="panel table-panel">
+                <h2>Employee List</h2>
+
+                {% if employees %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Birth date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for employee in employees %}
+                                <tr>
+                                    <td>{{ employee.id_employee }}</td>
+                                    <td>{{ employee.first_name }} {{ employee.last_name }}</td>
+                                    <td>{{ employee.email }}</td>
+                                    <td>{{ employee.phone }}</td>
+                                    <td>{{ employee.birth_date }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="empty">No employees yet.</p>
+                {% endif %}
+            </section>
+        </section>
+    </main>
+</body>
+</html>
