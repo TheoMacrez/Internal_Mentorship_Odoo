@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <main class="page">
+        <nav class="page-nav">
+            <a href="{{ url_for('index') }}">Back to start</a>
+        </nav>
+
+        <section class="hub-header">
+            <h1>Welcome {{ employee.first_name }} {{ employee.last_name }}</h1>
+            <p>Employee ID: {{ employee.id_employee }}</p>
+        </section>
+
+        <section class="hub-grid">
+            <div class="panel">
+                <h2>Next steps</h2>
+                <p class="empty">Links to skills, requests, mentor profiles and mentorships will live here.</p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

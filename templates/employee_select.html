@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Select Employee</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <main class="page">
+        <nav class="page-nav">
+            <a href="{{ url_for('index') }}">Back to start</a>
+        </nav>
+
+        <section class="toolbar">
+            <div>
+                <h1>Select Employee</h1>
+                <p>{{ employees|length }} employee(s)</p>
+            </div>
+        </section>
+
+        {% if employees %}
+            <section class="employee-grid">
+                {% for employee in employees %}
+                    <form method="post" action="{{ url_for('employees.connect_employee') }}">
+                        <input type="hidden" name="employee_id" value="{{ employee.id_employee }}">
+                        <button class="employee-button" type="submit">
+                            <span>{{ employee.first_name }} {{ employee.last_name }}</span>
+                            <small>{{ employee.email }}</small>
+                        </button>
+                    </form>
+                {% endfor %}
+            </section>
+        {% else %}
+            <section class="panel">
+                <p class="empty">No employees yet.</p>
+                <a class="text-link" href="{{ url_for('employees.create_employee') }}">Create one now</a>
+            </section>
+        {% endif %}
+    </main>
+</body>
+</html>

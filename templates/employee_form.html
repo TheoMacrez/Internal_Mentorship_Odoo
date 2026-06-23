@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create Employee</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <main class="page narrow-page">
+        <nav class="page-nav">
+            <a href="{{ url_for('index') }}">Back to start</a>
+        </nav>
+
+        <form class="panel" method="post" action="{{ url_for('employees.create_employee') }}">
+            <h1>Create Employee</h1>
+
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+
+            <label>
+                First name
+                <input name="first_name" type="text" required>
+            </label>
+
+            <label>
+                Last name
+                <input name="last_name" type="text" required>
+            </label>
+
+            <label>
+                Email
+                <input name="email" type="email" required>
+            </label>
+
+            <label>
+                Phone
+                <input name="phone" type="text" required>
+            </label>
+
+            <label>
+                Birth date
+                <input name="birth_date" type="date" required>
+            </label>
+
+            <button type="submit">Create and continue</button>
+        </form>
+    </main>
+</body>
+</html>

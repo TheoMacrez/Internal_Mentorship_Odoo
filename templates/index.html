@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Internal Mentorship</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <main class="page centered-page">
+        <section class="intro">
+            <h1>Internal Mentorship</h1>
+            <p>Select how you want to start.</p>
+        </section>
+
+        <section class="choice-grid">
+            <a class="choice-card" href="{{ url_for('employees.create_employee') }}">
+                <span>Create New Employee</span>
+            </a>
+
+            <a class="choice-card" href="{{ url_for('employees.select_employee') }}">
+                <span>Connect through an existing Employee</span>
+            </a>
+        </section>
+    </main>
+</body>
+</html>
